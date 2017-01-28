@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!--
+        © Material Theme 
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.2.5
+    -->
+    
+    <!-- Title -->
+    
+    <title>
+        Android 多进程通信 （IPC） | BeginLu
+    </title>
+    
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+    
+    <!-- Meta & INfo -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="BeginLu">
+    <meta name="description" content="不为繁华易匠心">
+    <meta name="keywords" content="null">
+    
+    <!--iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+    
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="BeginLu">
+    
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="http://beginlu.me">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Android 多进程通信 （IPC） | BeginLu">
+    <meta property="og:description" content="不为繁华易匠心">
+    
+     <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+        
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+    
+    <!-- Import CSS -->
+    <link rel="stylesheet" href="/css/material.min.css">
+    <link rel="stylesheet" href="/css/style.min.css">
+    <!-- Config CSS -->
+
+
+<!-- Other Styles -->
+<style>
+	body, html{
+		font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+	}
+	
+    a{
+        color: #00838F
+    }
+    
+    .mdl-card__media,
+    #search-label,
+    #search-form-label:after,
+    #scheme-Paradox .hot_tags-count,
+    #scheme-Paradox .sidebar_archives-count,
+    #scheme-Paradox .sidebar-colored .sidebar-header,
+    #scheme-Paradox .sidebar-colored .sidebar-badge{
+        background-color: #0097A7 !important
+    }
+    
+	/* Sidebar User Drop Down Menu Text Color */
+	#scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+    #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus{
+        color: #0097A7 !important
+    }
+    
+    #post_entry-right-info,
+    .sidebar-colored .sidebar-nav li:hover > a,
+    .sidebar-colored .sidebar-nav li:hover > a i,
+    .sidebar-colored .sidebar-nav li > a:hover,
+    .sidebar-colored .sidebar-nav li > a:hover i,
+    .sidebar-colored .sidebar-nav li > a:focus i,
+    .sidebar-colored .sidebar-nav > .open > a,
+    .sidebar-colored .sidebar-nav > .open > a:hover,
+    .sidebar-colored .sidebar-nav > .open > a:focus,
+    #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a{
+        color: #0097A7 !important
+    }
+    
+    .toTop{
+        background: #757575 !important
+    }
+		
+	.material-layout .material-post>.material-nav,
+	.material-layout .material-index>.material-nav,
+	.material-nav a{
+		color: #757575;
+	}
+		
+	#scheme-Paradox .MD-burger-layer {
+		background-color: #757575;
+	}
+
+	#scheme-Paradox #post-toc-trigger-btn{
+		color: #757575;
+	}
+	
+	.post-toc a:hover{
+		color: #00838F;
+		text-decoration: underline;
+	}
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+        body{
+            background-color: #F5F5F5
+        }
+		
+		/* blog_info bottom background */
+        #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+            background-color: #fff;
+        }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+        .fade {
+            transition: all 800ms linear;
+            -webkit-transform: translate3d(0,0,0);
+            -moz-transform: translate3d(0,0,0);
+            -ms-transform: translate3d(0,0,0);
+            -o-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0);
+            opacity: 1;
+        }
+
+        .fade.out{
+            opacity: 0;
+        }
+    </style>
+
+	<script src="/js/jquery.min.js"></script>
+	
+	<link rel="stylesheet" href="/css/highlight/darkula.css">
+	
+	<!-- UC Browser Compatible-->
+	<script>
+		var agent = navigator.userAgent.toLowerCase();
+		if(agent.indexOf('ucbrowser')>0) {
+			document.write('<link rel="stylesheet" href="/css/uc.css">');
+		   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+		}
+	</script>
+    
+    <!-- Custom Head -->
+    
+</head>
+	
+	
+
+    <body id="scheme-Paradox">
+
+		
+        <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+				
+			
+			
+            <!-- Main Container -->
+            <main class="material-layout__content" id="main">
+				
+                <!-- Top Anchor -->
+                <div id="top"></div>
+				
+				
+                <!-- Hamburger Button -->
+                <button class="MD-burger-icon sidebar-toggle">
+                    <span class="MD-burger-layer"></span>
+                </button>
+				
+				
+                <!-- Post TOC -->
+
+    
+	<!-- Back Button -->
+<!--
+	<div class="material-back" id="backhome-div" tabindex="0">
+		<a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" href="#" onclick="window.history.back();return false;" target="_self" role="button" data-upgraded=",MaterialButton,MaterialRipple">
+			<i class="material-icons" role="presentation">arrow_back</i>
+			<span class="mdl-button__ripple-container">
+				<span class="mdl-ripple"></span>
+			</span>
+		</a>
+	</div>			
+-->
+	<!-- Left aligned menu below button -->
+	<button id="post-toc-trigger-btn"
+			class="mdl-button mdl-js-button mdl-button--icon">
+	  <i class="material-icons">format_list_numbered</i>
+	</button>
+
+	<ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+		for="post-toc-trigger-btn">
+			
+			<ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#开启多进程"><span class="post-toc-number">1.</span> <span class="post-toc-text">开启多进程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多进程间通信的基础"><span class="post-toc-number">2.</span> <span class="post-toc-text">多进程间通信的基础</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#序列化对象"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">序列化对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Serializable-推荐用于文件存储"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">Serializable(推荐用于文件存储)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Parcelable-推荐用于数据传送"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">Parcelable(推荐用于数据传送)</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Binder"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Binder</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AIDL"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">AIDL</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#likeToDeath-和-unlikeToDeath"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">likeToDeath 和 unlikeToDeath</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android-中的-IPC-方式"><span class="post-toc-number">3.</span> <span class="post-toc-text">Android 中的 IPC 方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Bundle"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">Bundle</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#通过文件共享"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">通过文件共享</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Messenger"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">Messenger</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用AIDL"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">使用AIDL</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#服务端"><span class="post-toc-number">3.4.1.</span> <span class="post-toc-text">服务端</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#客户端"><span class="post-toc-number">3.4.2.</span> <span class="post-toc-text">客户端</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ADIL-支持的数据类型"><span class="post-toc-number">3.4.3.</span> <span class="post-toc-text">ADIL 支持的数据类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#AIDL-接口的创建"><span class="post-toc-number">3.4.4.</span> <span class="post-toc-text">AIDL 接口的创建</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ContentProvider"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">ContentProvider</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Socket"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">Socket</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Binder连接池"><span class="post-toc-number">4.</span> <span class="post-toc-text">Binder连接池</span></a></li></ol>
+		
+<!--			<li class="mdl-menu__item">Some Action</li>-->
+	</ul>
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+		
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+	<!-- Paradox Post Header -->
+	
+		
+			<!-- Random Thumbnail -->
+			<div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+				<script>
+    
+    var randomNum;
+    randomNum = Math.floor(Math.random() * 19 + 1);
+    
+    $(".post_thumbnail-random").css('background-image', 'url(' + '/img/random/material-' + randomNum + '.png' + ')');
+    
+</script>
+
+		
+	
+        <p class="article-headline-p">
+            Android 多进程通信 （IPC）
+        </p>
+    </div>
+
+	
+
+				
+				
+					<!-- Paradox Post Info -->
+					<div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>BeginLu</strong>
+        <span>8月 21, 2016</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+<!--
+    <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+        <i class="material-icons" role="presentation">favorite</i>
+        <span class="visuallyhidden">favorites</span>
+    </button>
+-->
+
+    <!-- Qrcode -->
+    
+
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/Android/">Android</a>
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+
+    
+
+    
+      
+      <!-- Busuanzi Views -->
+      <a class="post_share-link" href="#">
+        <li class="mdl-menu__item">
+            <span id="busuanzi_container_page_pv">
+                <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+            </span>
+        </li>
+      </a>
+      
+    
+
+    <!-- Share Weibo -->
+    
+    <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Android 多进程通信 （IPC）&url=http://beginlu.me//2016/08/21/Android 多进程通信 （IPC）/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <li class="mdl-menu__item">
+            分享到微博
+        </li>
+    </a>
+    
+
+    <!-- Share Twitter -->
+    
+    <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Android 多进程通信 （IPC）&url=http://beginlu.me//2016/08/21/Android 多进程通信 （IPC）/index.html&via=BeginLu" target="_blank">
+        <li class="mdl-menu__item">
+            分享到 Twitter
+        </li>
+    </a>
+    
+
+    <!-- Share Facebook -->
+    
+    <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://beginlu.me//2016/08/21/Android 多进程通信 （IPC）/index.html" target="_blank">
+        <li class="mdl-menu__item">
+            分享到 Facebook
+        </li>
+    </a>
+    
+
+    <!-- Share Google+ -->
+    
+    <a class="post_share-link" href="https://plus.google.com/share?url=http://beginlu.me//2016/08/21/Android 多进程通信 （IPC）/index.html" target="_blank">
+        <li class="mdl-menu__item">
+            分享到 Google+
+        </li>
+    </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+				
+
+                <!-- Post Content -->
+                <div id="post-content" class="markdown-Github mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+	
+		<h2 id="开启多进程"><a href="#开启多进程" class="headerlink" title="开启多进程"></a>开启多进程</h2><p>在四大组件（Activity，Service，Receiver，ContentProvider）中指定 android:process 属性</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span></span></div><div class="line">    <span class="attr">android:name</span>=<span class="string">".activity.TwoActivity"</span></div><div class="line">    <span class="attr">android:configChanges</span>=<span class="string">"screenLayout"</span></div><div class="line">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></div><div class="line">    <span class="attr">android:process</span>=<span class="string">":remote"</span> /&gt;</div></pre></td></tr></table></figure>
+<p><img src="/content/images/2016/08/-----2016-08-10-10-57-49.png" alt=""></p>
+<p>多进程可能造成的问题</p>
+<ol>
+<li>静态成员和单例模式完全失效（系统为每个进程都创建了一个虚拟机）</li>
+<li>线程同步机制完全失效（同上）</li>
+<li>SharedPreferences 的可靠性下降（SharedPreferences 不支持两个进程同时进行写操作.否则会造成数据丢失）</li>
+<li>Application 会多次创建（同1）</li>
+</ol>
+<h2 id="多进程间通信的基础"><a href="#多进程间通信的基础" class="headerlink" title="多进程间通信的基础"></a>多进程间通信的基础</h2><h3 id="序列化对象"><a href="#序列化对象" class="headerlink" title="序列化对象"></a>序列化对象</h3><h4 id="Serializable-推荐用于文件存储"><a href="#Serializable-推荐用于文件存储" class="headerlink" title="Serializable(推荐用于文件存储)"></a>Serializable(推荐用于文件存储)</h4><p>需要被序列号的实现 Serializable 接口就可进行序列化和反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserManager</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">123321798231L</span>;<span class="comment">//一个任意值.可不不指定.但建议指定.用户校验反序列号的对象是否为该对象</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> userId = <span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>序列号与反序列号过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//序列号过程</span></div><div class="line">ObjectOutputStream outputStream = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(getFileStreamPath(<span class="string">"cache.txt"</span>)));</div><div class="line">outputStream.writeObject(userManager);</div><div class="line">outputStream.close();</div><div class="line"></div><div class="line"><span class="comment">//反序列化过程</span></div><div class="line">ObjectInputStream objectInputStream = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(getFileStreamPath(<span class="string">"cache.txt"</span>)));</div><div class="line">UserManager userManager = (UserManager) objectInputStream.readObject();</div><div class="line">objectInputStream.close();</div></pre></td></tr></table></figure>
+<h4 id="Parcelable-推荐用于数据传送"><a href="#Parcelable-推荐用于数据传送" class="headerlink" title="Parcelable(推荐用于数据传送)"></a>Parcelable(推荐用于数据传送)</h4><p>与Serializable类似.同样是使需要被序列号的类实现Parcelable接口.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Parcelable</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> userId;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(<span class="keyword">int</span> userId)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.userId = userId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">User</span><span class="params">(Parcel in)</span> </span>&#123;</div><div class="line">        userId = in.readInt();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Creator&lt;User&gt; CREATOR = <span class="keyword">new</span> Creator&lt;User&gt;() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> User <span class="title">createFromParcel</span><span class="params">(Parcel in)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> User(in);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="keyword">public</span> User[] newArray(<span class="keyword">int</span> size) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> User[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">describeContents</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel parcel, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        <span class="comment">//在这里执行序列号过程</span></div><div class="line">        parcel.writeInt(userId);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>数据传送与获取过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">User userManager = <span class="keyword">new</span> User(<span class="number">3</span>);</div><div class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, ThreeActivity.class);</div><div class="line">intent.putExtra(<span class="string">"user"</span>, userManager);</div><div class="line">startActivity(intent);</div><div class="line"></div><div class="line">User userManager = getIntent().getParcelableExtra(<span class="string">"user"</span>);</div><div class="line">Log.d(<span class="string">"Three"</span>, userManager.userId + <span class="string">""</span>);</div></pre></td></tr></table></figure>
+<h3 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h3><p>Binder 是 Android 中的一种跨进程的通信方式，主要用于 Service，包括AIDL和 Messenger。Messenger 的底层又是由 AIDL 实现.</p>
+<h4 id="AIDL"><a href="#AIDL" class="headerlink" title="AIDL"></a>AIDL</h4><p>首先创建三个文件</p>
+<p><strong>Book.java</strong> 简单的实体类.实现了 Parcelable 接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.lu.ipc.aidl;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.os.Parcel;</div><div class="line"><span class="keyword">import</span> android.os.Parcelable;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by Begin on 16/8/10.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Book</span> <span class="keyword">implements</span> <span class="title">Parcelable</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> bookId;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Book</span><span class="params">(<span class="keyword">int</span> bookId)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.bookId = bookId;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">Book</span><span class="params">(Parcel in)</span> </span>&#123;</div><div class="line">        bookId = in.readInt();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Creator&lt;Book&gt; CREATOR = <span class="keyword">new</span> Creator&lt;Book&gt;() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Book <span class="title">createFromParcel</span><span class="params">(Parcel in)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Book(in);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="keyword">public</span> Book[] newArray(<span class="keyword">int</span> size) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Book[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">describeContents</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel parcel, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        parcel.writeInt(bookId);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>Book.aidl</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.lu.ipc.aidl;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.lu.ipc.aidl.Book;</div><div class="line"></div><div class="line">parcelable Book;</div></pre></td></tr></table></figure>
+<p><strong>IBookManager.aidl</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.lu.ipc.aidl;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.lu.ipc.aidl.Book;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IBookManager</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">basicTypes</span><span class="params">(<span class="keyword">int</span> anInt, <span class="keyword">long</span> aLong, <span class="keyword">boolean</span> aBoolean, <span class="keyword">float</span> aFloat,</span></span></div><div class="line">            <span class="keyword">double</span> aDouble, String aString);</div><div class="line"></div><div class="line">    <span class="function">List&lt;Book&gt; <span class="title">getBookList</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addBook</span><span class="params">(in Book book)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这两个AIDL 文件是用于让系统自动生成 Binder 服务端代码.实现后的代码在./app/build/generated/source/aidl/debug/com/lu/ipc/aidl/目录下.</p>
+<p>主要说下生成的类中的 getBookList 和 addBook 两个方法.这两个方法都是在当客户端调用该方法的时候创建一个输入型对象_data 和输出型对象_reply，如果有传入参数则将参数写入到_data 中,接着调用 transact 方法发起 RPC（远程过程调用）请求,这时候当前线程会被挂起.然后服务端的 onTransact 方法会被调用.直到 RPC 过程返回后,当前线程继续执行,并从_reply 中取出返回结果并 return.</p>
+<p>附上 Binder 的工作机制图：</p>
+<p><img src="/content/images/2016/08/-----2016-08-11-09-32-10.png" alt=""></p>
+<h4 id="likeToDeath-和-unlikeToDeath"><a href="#likeToDeath-和-unlikeToDeath" class="headerlink" title="likeToDeath 和 unlikeToDeath"></a>likeToDeath 和 unlikeToDeath</h4><p>这两个是 Binder 中很重要的方法.主要用于服务端和客户端的链接被断开（服务端被杀死）</p>
+<p>（没看懂书上说的啥玩意.设置代理.代理触发后回调…大概就这个意思吧…）</p>
+<p>设置代理是绑定成功服务后通过<code>binder.linkToDeath(mDeathRecipient,0);</code>实现.</p>
+<p>设置代理回调</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> DeathRecipient mDeathRecipient = <span class="keyword">new</span> DeathRecipient() &#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">binderDied</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mBookManager == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        mBookManager.asBinder().unlinkToDeath(mDeathRecipient, <span class="number">0</span>);</div><div class="line">        mBookManager = <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="Android-中的-IPC-方式"><a href="#Android-中的-IPC-方式" class="headerlink" title="Android 中的 IPC 方式"></a>Android 中的 IPC 方式</h2><p>Android 中的 IPC 方式有很多种.可以通过 Intent 中附加 extras 可以通过共享文件.还有 ContentProvider.以及网络通信.</p>
+<h3 id="Bundle"><a href="#Bundle" class="headerlink" title="Bundle"></a>Bundle</h3><p>在 Activity Service Receiver 中都是支持再 Intent 中传递 Bundle 数据的.再 Bundle 中可以附加能够被序列号的对象进行通信</p>
+<h3 id="通过文件共享"><a href="#通过文件共享" class="headerlink" title="通过文件共享"></a>通过文件共享</h3><p>没啥说的.读写同一个文件就是了.对象可以通过实现Serializable接口进行序列化</p>
+<p>要注意的是不能使用 Sharedpreferences 文件进行共享…因为有缓存…</p>
+<h3 id="Messenger"><a href="#Messenger" class="headerlink" title="Messenger"></a>Messenger</h3><p>本质就是AIDL.是AIDL 一个的一个简单封装.但是 Messenger 只能用来处理消息传送.如果需要调用服务端的方法.Messenger 就无能为力了.这时候就需要使用AIDL 来自己实现跨进程的方法调用.</p>
+<p>首先定义 Service</p>
+<p><strong>BookService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//用于接收和处理消息的 Handle</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BookHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">            <span class="keyword">switch</span> (msg.what) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:<span class="comment">//当收到消息后</span></div><div class="line">                    Log.d(<span class="string">"BookService"</span>, <span class="string">"msg:"</span> + msg.getData().getString(<span class="string">"msg"</span>));<span class="comment">//获取消息内容并输出 log</span></div><div class="line">                    Messenger client = msg.replyTo;<span class="comment">//获取 reply</span></div><div class="line">                    Message replyMessage = Message.obtain(<span class="keyword">null</span>, <span class="number">1</span>);<span class="comment">//创建返回消息</span></div><div class="line">                    Bundle bundle = <span class="keyword">new</span> Bundle();</div><div class="line">                    bundle.putString(<span class="string">"reply"</span>, <span class="string">"world"</span>);<span class="comment">//创建 Bundle 并添加内容</span></div><div class="line">                    replyMessage.setData(bundle);<span class="comment">//为返回消息添加 Bundle 内容</span></div><div class="line">                    <span class="keyword">try</span> &#123;</div><div class="line">                        client.send(replyMessage);<span class="comment">//发送返回消息</span></div><div class="line">                    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                        e.printStackTrace();</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    <span class="keyword">super</span>.handleMessage(msg);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Messenger mMessenger = <span class="keyword">new</span> Messenger(<span class="keyword">new</span> BookHandler());<span class="comment">//创建 Messenger</span></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</div><div class="line">        <span class="comment">//绑定成功后返回Messenger</span></div><div class="line">        <span class="keyword">return</span> mMessenger.getBinder();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>MainActivity.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Messenger mGetReplyMessenger = <span class="keyword">new</span> Messenger(<span class="keyword">new</span> MessengerHandler());</div><div class="line">    <span class="keyword">private</span> Messenger mMessenger = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="comment">//接收并处理 Service 传来的消息</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MessengerHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">            <span class="keyword">switch</span> (msg.what) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">                    Log.d(<span class="string">"reply"</span>, msg.getData().getString(<span class="string">"reply"</span>));<span class="comment">//获取消息内容并输出 log</span></div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    <span class="keyword">super</span>.handleMessage(msg);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ServiceConnection mConnection = <span class="keyword">new</span> ServiceConnection() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="comment">//绑定成功后的回调</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</div><div class="line">            mMessenger = <span class="keyword">new</span> Messenger(service);<span class="comment">//获取 Messenger</span></div><div class="line">            Message msg = Message.obtain(<span class="keyword">null</span>, <span class="number">1</span>);<span class="comment">//创建消息</span></div><div class="line">            Bundle data = <span class="keyword">new</span> Bundle();<span class="comment">//创建 Bundle</span></div><div class="line">            data.putString(<span class="string">"msg"</span>, <span class="string">"hello"</span>);<span class="comment">//为 Bundle 添加内容</span></div><div class="line">            msg.setData(data);<span class="comment">//为消息添加 Bundle</span></div><div class="line">            msg.replyTo = mGetReplyMessenger;<span class="comment">//为消息添加reply</span></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                mMessenger.send(msg);<span class="comment">//发送消息到 Service</span></div><div class="line">            &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, BookService.class);</div><div class="line">        bindService(intent, mConnection, BIND_AUTO_CREATE);<span class="comment">//绑定消息并设置绑定成功回调</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">08-11 15:28:13.797 28106-28106/com.lu.ipc:remote D/BookService: msg:hello</div><div class="line">08-11 15:28:13.826 27925-27925/com.lu.ipc D/reply: world</div></pre></td></tr></table></figure>
+<p>附上 Messenger 通信的工作原理图</p>
+<p><img src="/content/images/2016/08/-----2016-08-11-15-42-15.png" alt=""></p>
+<h3 id="使用AIDL"><a href="#使用AIDL" class="headerlink" title="使用AIDL"></a>使用AIDL</h3><h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><p>服务端需要创建一个 Service 用来监听客户端的连接请求,然后创建一个AIDL 文件,AIDL 中声明需要暴率给客户端的接口,再 Service 中实现 AIDL 接口</p>
+<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><p>客户端成功绑定 Service 后将客户端返回的 Binder 对象转成 AIDL 接口所属的类型即可进行方法的调用.</p>
+<h4 id="ADIL-支持的数据类型"><a href="#ADIL-支持的数据类型" class="headerlink" title="ADIL 支持的数据类型"></a>ADIL 支持的数据类型</h4><ul>
+<li>基本数据类型 int long char boolean double</li>
+<li>String 和 CharSequence</li>
+<li>List：只支持 ArrayList 且要求里面的元素为 ADIL 支持的类型</li>
+<li>Map：只支持 HashMap 且要求里面的元素为 ADIL 支持的类型</li>
+<li>Parcelable：所有实现了该接口的对象</li>
+<li>AIDL：所有的 AIDL 接口本身也可以再 AIDL 中使用</li>
+</ul>
+<blockquote>
+<p>注：AIDL 和 Parcelable 必须显示的 import</p>
+<p>如果 AIDL 使用了自定义的 Parcelable 对象,必须新建一个同名的 AIDL 文件,然再其中通过 parcelable 声明类型,例如之前提到的 Book.aidl</p>
+</blockquote>
+<h4 id="AIDL-接口的创建"><a href="#AIDL-接口的创建" class="headerlink" title="AIDL 接口的创建"></a>AIDL 接口的创建</h4><p><strong>Book.aidl</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Book.aidl</span></div><div class="line"><span class="keyword">package</span> com.lu.ipc.aidl;</div><div class="line"></div><div class="line"><span class="comment">// Declare any non-default types here with import statements</span></div><div class="line"></div><div class="line">parcelable Book;</div></pre></td></tr></table></figure>
+<p><strong>IBookManager.aidl</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// IBookManager.aidl</span></div><div class="line"><span class="keyword">package</span> com.lu.ipc.aidl;</div><div class="line"></div><div class="line"><span class="comment">// Declare any non-default types here with import statements</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> com.lu.ipc.aidl.Book;</div><div class="line"><span class="keyword">import</span> com.lu.ipc.aidl.IOnNewBookArrivedListener;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IBookManager</span> </span>&#123;</div><div class="line">    <span class="function">List&lt;Book&gt; <span class="title">getBookList</span><span class="params">()</span></span>;<span class="comment">//获取数据</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addBook</span><span class="params">(in Book book)</span></span>;<span class="comment">//添加数据</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">registerListener</span><span class="params">(IOnNewBookArrivedListener listener)</span></span>;<span class="comment">//添加监听</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unregisterListener</span><span class="params">(IOnNewBookArrivedListener listener)</span></span>;<span class="comment">//取消监听</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>IOnNewBookArrivedListener.aidl</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// IOnNewBookArrivedListener.aidl</span></div><div class="line"><span class="keyword">package</span> com.lu.ipc.aidl;</div><div class="line"></div><div class="line"><span class="comment">// Declare any non-default types here with import statements</span></div><div class="line"><span class="keyword">import</span> com.lu.ipc.aidl.Book;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IOnNewBookArrivedListener</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onNewBookArrived</span><span class="params">(in Book newBook)</span></span>;<span class="comment">//回调接口</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面三个文件就稍微解释下.</p>
+<p>第一个是实体类的 AIDL 声明.之前说过很多次了…</p>
+<p>第二个就理解成是定义可以再客户端调用的服务端中的方法…</p>
+<p>第三个是回调接口…就是在客户端中实现该方法.然后注册到服务端中.服务端可以在指定时候调用这个方法.啊…就是 CallBack…我感觉我解释的有问题…可以看下下面的效果…</p>
+<p>服务端实现 <strong>BookService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookManagerService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> CopyOnWriteArrayList&lt;Book&gt; mBookList = <span class="keyword">new</span> CopyOnWriteArrayList&lt;&gt;();<span class="comment">//用户保存Book列表</span></div><div class="line">    <span class="keyword">private</span> RemoteCallbackList&lt;IOnNewBookArrivedListener&gt; mListenerList = <span class="keyword">new</span> RemoteCallbackList&lt;&gt;();<span class="comment">//用户包括监听列表</span></div><div class="line">    <span class="comment">//实现 AIDL 接口</span></div><div class="line">    <span class="keyword">private</span> Binder mBinder = <span class="keyword">new</span> IBookManager.Stub() &#123;</div><div class="line">        <span class="comment">//获取Book的方法</span></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> List&lt;Book&gt; <span class="title">getBookList</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</div><div class="line">            <span class="keyword">return</span> mBookList;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//添加Book的方法</span></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addBook</span><span class="params">(Book book)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</div><div class="line">            mBookList.add(book);<span class="comment">//添加Book</span></div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> N = mListenerList.beginBroadcast();<span class="comment">//在需要遍历RemoteCallBackList的时候用户获取 list 长度的方法.</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</div><div class="line">                mListenerList.getBroadcastItem(i).onNewBookArrived(book);<span class="comment">//获取到监听后通知客户端.</span></div><div class="line">            &#125;</div><div class="line">            mListenerList.finishBroadcast();<span class="comment">//与beginBroadcast成对使用.</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerListener</span><span class="params">(IOnNewBookArrivedListener listener)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</div><div class="line">            mListenerList.register(listener);<span class="comment">//往监听列表中添加监听</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unregisterListener</span><span class="params">(IOnNewBookArrivedListener listener)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</div><div class="line">            mListenerList.unregister(listener);<span class="comment">//从监听列表中移除监听</span></div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mBinder;<span class="comment">//放回服务器 Binder</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>客户端实现 <strong>ThreeActivity.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreeActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> IBookManager bookManager = <span class="keyword">null</span>;<span class="comment">//服务器 binder</span></div><div class="line">    <span class="keyword">private</span> ServiceConnection mConnection = <span class="keyword">new</span> ServiceConnection() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;<span class="comment">//启动并绑定服务后被调用</span></div><div class="line">            bookManager = IBookManager.Stub.asInterface(service);<span class="comment">//获取并保存服务器 binder</span></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                bookManager.registerListener(mOnNewBookArrivedListener);<span class="comment">//注册监听.</span></div><div class="line">            &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">//客户端回调.在服务端执行onNewBookArrived 时被调用</span></div><div class="line">    <span class="keyword">private</span> IOnNewBookArrivedListener mOnNewBookArrivedListener = <span class="keyword">new</span> IOnNewBookArrivedListener.Stub() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNewBookArrived</span><span class="params">(Book newBook)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</div><div class="line">            Log.d(<span class="string">"TwoActivity"</span>, newBook.bookId + <span class="string">""</span>);<span class="comment">//输出 log</span></div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_two);</div><div class="line"></div><div class="line">        findViewById(R.id.button).setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    bookManager.addBook(<span class="keyword">new</span> Book(<span class="number">10</span>));<span class="comment">//点击按钮后往服务器添加一个Book</span></div><div class="line">                &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        Intent intent = <span class="keyword">new</span> Intent(ThreeActivity.<span class="keyword">this</span>, BookManagerService.class);</div><div class="line">        bindService(intent, mConnection, BIND_AUTO_CREATE);<span class="comment">//绑定服务.设置绑定成功后的回调</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行代码后点击按钮就可以看到有输出 log 信息.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">08-12 17:59:42.114 13209-13209/com.lu.ipc:remote D/TwoActivity: 10</div></pre></td></tr></table></figure>
+<p><strong>注意：在客户端中调用服务端的方法是在 UI 线程中操作的.如果服务端中执行的是一个耗时操作的话很有可能会产生 ANR（应用程序无响应）所以需要移到非 UI 线程中执行</strong></p>
+<p>还有…因为回调方法其实是运行再 Binder 中的.不能直接操作 UI 相关内容.可以通过 Handler切换到 UI 线程中再去操作 UI</p>
+<h3 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h3><p>ContentProvider是 Android 中专门用于不同应用间进行数据共享,所以它也非常适合进程间通信.他的底层实现其实也是 Binder.</p>
+<p>具体实现方式…</p>
+<p>BookProvider.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookProvider</span> <span class="keyword">extends</span> <span class="title">ContentProvider</span></span></div></pre></td></tr></table></figure>
+<p>就写这一行…然后实现 ContentProvider 里面的函数</p>
+<p>调用方式.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Uri uri = Uri.parse(<span class="string">"content://com.lu.ipc.provider.BookProvider"</span>);</div><div class="line">getContentResolver().query(uri, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</div><div class="line">getContentResolver().delete(uri, <span class="keyword">null</span>, <span class="keyword">null</span>);</div><div class="line">getContentResolver().getType(uri);</div></pre></td></tr></table></figure>
+<p>当然…这个 Uri 不是乱写的.是再创建 BookProvider.java之后是需要再 AndroidManifest.xml 里面注册的</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">provider</span></span></div><div class="line">    <span class="attr">android:name</span>=<span class="string">".provider.BookProvider"</span></div><div class="line">    <span class="attr">android:authorities</span>=<span class="string">"com.lu.ipc.provider.BookProvider"</span></div><div class="line">    <span class="attr">android:process</span>=<span class="string">":remote"</span> /&gt;</div></pre></td></tr></table></figure>
+<p>别怪我写的随意…讲道理…我又不喜欢用这个…</p>
+<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>我很淡定的跳过了这一部分…下次有空再补上…</p>
+<p>##选用合适的 IPC 方式<br><img src="/content/images/2016/08/-----2016-08-13-16-03-34.png" alt=""></p>
+<h2 id="Binder连接池"><a href="#Binder连接池" class="headerlink" title="Binder连接池"></a>Binder连接池</h2><p>没太懂书上将的一些东西.只是大概知道一部分.主要是解决 Binder 过多的时候不至于创建一堆 Service 这个问题.每个 Binder 都单独创建一个类.实现AIDL 中的方法.再创建一个 AIDL 中只包含一个<code>IBinder queryBinder(int binderCode);</code>方法.这个方法的实现.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">IBinder binder = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">switch</span> (binderCode) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">        binder = <span class="keyword">new</span> SecurityCenterImpl();</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">    <span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">        binder = <span class="keyword">new</span> ComputeImpl();</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> binder;</div></pre></td></tr></table></figure>
+<p>关于这个 AIDL 的调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">IBinder securityBinder = mBinderPool.queryBinder(<span class="number">1</span>);</div><div class="line">mSecurityCenter = SecurityCenterImpl.asInterface(securityBinder);</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    String hello = mSecurityCenter.decrypt(<span class="string">"hello"</span>);</div><div class="line">    Log.d(<span class="string">"Four"</span>, hello);</div><div class="line">&#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">    e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以就是创建了一个 Service 用了分发对于 Binder 的调用.或者可以说是创建了一个 Service 用于查询 Binder.</p>
+<blockquote>
+<p>本文内容主要来源于《Android开发艺术探索》.</p>
+</blockquote>
+
+	
+	
+	
+	
+</div>
+				
+				
+
+                <!-- Post Comments -->
+                
+                    
+
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    
+    <!-- Prev Nav -->
+    
+        <a href="/2016/08/21/Android 事件分发流/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2016/08/04/Android动态加载/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+        </div>
+    </div>
+
+				
+				
+					<!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay "></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored  sidebar-fixed-left" role="navigation">
+	<div id="sidebar-main">
+	    <!-- Sidebar Header -->
+		<div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+    <i class="material-icons">clear_all</i>
+    <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="BeginLu's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        lujunming1994@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+		<!-- Sidebar Navigation  -->
+		<ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+			
+                <li>
+                    <a href="mailto:lujunming1994@gmail.com" target="_blank" title="Email Me">
+						<i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    <li id="sidebar-first-li">
+        <a href="/" target="_self">
+            <i class="material-icons sidebar-material-icons">home</i>
+             主页
+        </a>
+    </li>
+
+    <!-- I'm Feeling Lucky -->
+<!--
+    <li class="dropdown">
+        <a href="" target="_self">
+            <i class="material-icons sidebar-material-icons">explore</i>
+             sidebar.imlucky
+        </a>
+    </li>
+-->
+
+
+    <!-- Archives  -->
+    <li class="dropdown">
+        <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+            <i class="material-icons sidebar-material-icons">inbox</i>
+             归档
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+            <a class="sidebar_archives-link" href="/archives/2017/01/">一月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/12/">十二月 2016<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/11/">十一月 2016<span class="sidebar_archives-count">8</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/08/">八月 2016<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/07/">七月 2016<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/05/">五月 2016<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/04/">四月 2016<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2016/01/">一月 2016<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2015/12/">十二月 2015<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2015/11/">十一月 2015<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2015/08/">八月 2015<span class="sidebar_archives-count">6</span></a>
+        </ul>
+    </li>
+
+    <!-- Categories  -->
+    
+
+    <!-- Divider -->
+    <li class="divider"></li>
+
+
+    <!-- Pages  -->
+	
+		<li>
+			<a href="/tags" title="标签云">
+				标签云
+			</a>
+		</li>
+	
+		<li>
+			<a href="/gallery" title="图库">
+				图库
+			</a>
+		</li>
+	
+		<li>
+			<a href="/links" title="友情链接">
+				友情链接
+			</a>
+		</li>
+	
+		<li>
+			<a href="/about" title="about">
+				about
+			</a>
+		</li>
+	
+
+    <!-- Article Numebr  -->
+    <li>
+        <a href="/archives">
+             文章总数
+             <span class="sidebar-badge">27</span>
+        </a>
+    </li>
+</ul>
+
+
+		<!-- Sidebar Divider -->
+		<div class="sidebar-divider"></div>
+
+		<!-- Sidebar Footer -->
+		<!-- 
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :) 
+-->
+
+<!-- Theme Material -->
+<a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+	<div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+		主题 - Material
+		<span class="sidebar-badge badge-circle">i</span>
+	</div>
+</a>
+
+<!-- Help & Support -->
+<!--
+<a href="mailto:hiviosey@gmail.com" class="sidebar-footer-text-a">
+    <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+		sidebar.help
+		<span class="mdl-button__ripple-container">
+			<span class="mdl-ripple"></span>
+		</span>
+	</div>
+</a>
+-->
+
+<!-- Feedback -->
+<!--
+<a href="https://github.com/viosey/hexo-theme-material/issues" target="_blank" class="sidebar-footer-text-a">
+    <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+         sidebar.feedback
+                    <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div>
+</a>
+-->
+
+<!-- Abount Theme -->
+<!--
+<a href="https://blog.viosey.com/index.php/Material.html" target="_blank" class="sidebar-footer-text-a">
+    <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+         sidebar.about_theme
+        <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></div>
+</a>-->
+
+	</div>
+    
+    <!-- Sidebar Sponsor -->
+    
+
+
+</aside>
+
+				
+				
+				
+					<!-- Footer Top Button -->
+					<div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+				
+				
+				<!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+	
+	
+		<!-- Paradox Footer Left Section -->
+		<div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+    
+
+    <!-- Facebook -->
+    
+    
+
+    <!-- Google + -->
+    
+    
+
+    <!-- Weibo -->
+    
+    <a href="http://weibo.com/2569097247" target="_blank"><button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-weibo.png);">
+        <span class="visuallyhidden">Weibo</span>
+    </button></a>
+    
+
+    <!-- Instagram -->
+    
+    
+
+    <!-- Tumblr -->
+    
+    
+
+    <!-- Github -->
+    
+    <a href="https://github.com/BeginLjm" target="_blank"><button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-github.png);">
+        <span class="visuallyhidden">Github</span>
+    </button></a>
+    
+
+    <!-- LinkedIn -->
+    
+    
+
+    <!-- Zhihu -->
+    
+    <a href="https://www.zhihu.com/people/qiao-dai-ma-de-ban-zhuan-gong/activities" target="_blank"><button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-zhihu.png);">
+        <span class="visuallyhidden">Zhihu</span>
+    </button></a>
+    
+</div>
+
+
+		<!--Copyright-->
+		<div id="copyright">Copyright&nbsp;©&nbsp;<script type="text/javascript">var fd = new Date();document.write(fd.getFullYear());</script>&nbsp;BeginLu</div>
+
+		<!-- Paradox Footer Right Section -->
+
+		<!-- 
+		I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+		It will not impact the appearance and can give developers a lot of support :)
+
+		很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+		它不会影响美观并可以给开发者很大的支持。 :) 
+		-->
+
+		<div class="mdl-mini-footer--right-section">
+			<div>
+				<div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+				<div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+			</div>
+		</div>
+	
+    
+</footer>
+                
+				<!-- Import File -->
+<script src="/js/highlight.min.js"></script>
+<script src="/js/js.min.js"></script>
+<script src="/js/nprogress.js"></script>
+
+<script type="text/javascript">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    
+    $('#nprogress .bar').css({
+        'background': '#FF4081'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #FF4081, 0 0 15px #FF4081'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#FF4081',
+        'border-left-color': '#FF4081'
+    });
+    
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+<!-- Swiftye -->
+
+
+<!-- Local Search-->
+
+
+<!-- Window Load-->
+<script>
+    $(window).load(function() {
+        // Post_Toc parent position fixed
+        $(".post-toc-wrap").parent(".mdl-menu__container").css("position", "fixed");
+    });
+</script>
+
+<!-- MathJax Load-->
+
+            </main>
+        </div>
+		
+    </body>
+		
+	
+</html>
