@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title><![CDATA[Android动态加载]]></title>
+      <title><![CDATA[Android代码混淆]]></title>
       <url>http://beginlu.me/2017/05/19/Android%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/</url>
       <content type="html"><![CDATA[<p>##Android中的代码混淆</p>
 <p>####代码混淆的意义<br>Android应用程序基本是使用JAVA语言进行开发，JAVA编译后的class文件又十分容易被反编译的，所以为了保护源代码，需要对编译后的class文件进行混淆</p>
