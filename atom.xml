@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://beginlu.me/"/>
-  <updated>2017-01-08T13:44:05.999Z</updated>
+  <updated>2017-05-21T08:10:28.000Z</updated>
   <id>http://beginlu.me/</id>
   
   <author>
@@ -16,23 +16,57 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>GSON在序列化Page时会出现的问题</title>
-    <link href="http://beginlu.me/2017/01/08/GSON%E5%9C%A8%E5%BA%8F%E5%88%97%E5%8C%96Page%E6%97%B6%E4%BC%9A%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
-    <id>http://beginlu.me/2017/01/08/GSON在序列化Page时会出现的问题/</id>
-    <published>2017-01-08T13:43:00.000Z</published>
-    <updated>2017-01-08T13:44:05.999Z</updated>
+    <title>Android动态加载</title>
+    <link href="http://beginlu.me/2017/05/19/Android%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86/"/>
+    <id>http://beginlu.me/2017/05/19/Android中的代码混淆/</id>
+    <published>2017-05-19T02:59:00.000Z</published>
+    <updated>2017-05-21T08:10:28.000Z</updated>
     
-    <content type="html"><![CDATA[<p>暂时就是记录一下，GSON在解析Pageable时会出现名称重复的问题。出现的名称就是pageable，原因暂时时发现page中会有一个pageable和一个chunk.pageable。解决方案暂时只想到使用TypeAdapter或ExclusionStrategy。但尝试了一晚上都没能成功，原因暂时不清楚。有空了解下GSON的序列化过程后再尝试解决这个问题。</p>
+    <content type="html"><![CDATA[<p>##Android中的代码混淆</p>
+<p>####代码混淆的意义<br>Android应用程序基本是使用JAVA语言进行开发，JAVA编译后的class文件又十分容易被反编译的，所以为了保护源代码，需要对编译后的class文件进行混淆</p>
+<p>####混淆的过程<br>Android所使用的代码混淆方案是ProGuard。ProGuard包含了以下几个功能</p>
+<ol>
+<li>压缩：检测和移除封装应用中未使用的类、字段、方法和属性</li>
+<li>优化：优化字节码，移除未使用的代码指令</li>
+<li>混淆：用短名称混淆其余的类、字段和方法</li>
+<li>预检：确保class文件是可执行的</li>
+</ol>
+<p>####要注意的地方<br>ProGuard压缩的原理类似于JVM垃圾回收机制中的标记-清除法。同样由一个入口点开始进行遍历，查找哪些类和类成员在使用，而未被使用的则会被抛弃。</p>
+<p>这时候会出现一些问题，比如JNI中调用的方法和反射到的类以及WebView中调用的JS方法等等。这些都是无法被遍历到的，还有一部分是由于在XML等其他配置文件中有配置的比如四大组件，自定义View等。而这些就需要通过配置文件进行处理。</p>
+<p>需要在配置文件中配置的类型：</p>
+<ul>
+<li>四大组件</li>
+<li>自定义View</li>
+<li>R文件</li>
+<li>JNI调用的方法</li>
+<li>反射用到的类</li>
+<li>WebView中JavaScript调用的方法</li>
+<li>枚举类型</li>
+<li>Parcelable</li>
+<li>Serializable</li>
+<li>第三方包</li>
+</ul>
+<p>在配置文件中还有一些设置项，包括混淆优化次数，混淆算法，混淆替换规则之类的。</p>
+<p>####混淆输出的文件<br>在混淆结束后会在mapping文件夹中生成四个文件</p>
+<ul>
+<li><code>dump.txt</code> 说明 APK 中所有类文件的内部结构。</li>
+<li><code>mapping.txt</code> 提供原始与混淆过的类、方法和字段名称之间的转换。</li>
+<li><code>seeds.txt</code> 列出未进行混淆的类和成员。</li>
+<li><code>usage.txt</code> 列出从 APK 移除的代码。</li>
+</ul>
+<p>####假装是总结<br>代码混淆主要就是让反编译后的代码变得更难以阅读，但是有心的话依然还是可以破解。所以我个人感觉一些非常重要的涉及到安全性的代码不应该放在客户端。当然如果是为了避免被重新套壳上架这样的。可以考虑DexGuard应用加固技术。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;暂时就是记录一下，GSON在解析Pageable时会出现名称重复的问题。出现的名称就是pageable，原因暂时时发现page中会有一个pageable和一个chunk.pageable。解决方案暂时只想到使用TypeAdapter或ExclusionStrategy。但尝
+      &lt;p&gt;##Android中的代码混淆&lt;/p&gt;
+&lt;p&gt;####代码混淆的意义&lt;br&gt;Android应用程序基本是使用JAVA语言进行开发，JAVA编译后的class文件又十分容易被反编译的，所以为了保护源代码，需要对编译后的class文件进行混淆&lt;/p&gt;
+&lt;p&gt;####混淆的过程&lt;
     
     </summary>
     
     
-      <category term="Java" scheme="http://beginlu.me/tags/Java/"/>
+      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
     
   </entry>
   
@@ -41,7 +75,7 @@
     <link href="http://beginlu.me/2017/01/08/2016%E5%B9%B4%E6%80%BB%E7%BB%93/"/>
     <id>http://beginlu.me/2017/01/08/2016年总结/</id>
     <published>2017-01-08T03:36:00.000Z</published>
-    <updated>2017-01-08T03:37:01.360Z</updated>
+    <updated>2017-01-08T03:37:01.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="2016年总结"><a href="#2016年总结" class="headerlink" title="2016年总结"></a>2016年总结</h1><blockquote>
 <p>不为繁华易匠心</p>
@@ -69,40 +103,11 @@
   </entry>
   
   <entry>
-    <title>Spring MVC 错误...</title>
-    <link href="http://beginlu.me/2016/12/28/Spring%20MVC%20%E9%94%99%E8%AF%AF/"/>
-    <id>http://beginlu.me/2016/12/28/Spring MVC 错误/</id>
-    <published>2016-12-28T01:02:00.000Z</published>
-    <updated>2017-01-07T03:25:04.420Z</updated>
-    
-    <content type="html"><![CDATA[<p>当Spring Mvc报错是说xxxrepository和spring-config.xml和xxxEntity这些错误时.</p>
-<ul>
-<li>首先考虑Spring-config配置文件是否出错</li>
-<li>再考虑persistence配置文件是否出错</li>
-<li>最后还需要考虑表单之间自动创建的关系函数是否有问题.</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;当Spring Mvc报错是说xxxrepository和spring-config.xml和xxxEntity这些错误时.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;首先考虑Spring-config配置文件是否出错&lt;/li&gt;
-&lt;li&gt;再考虑persistence配置文件是否出错&lt;/li
-    
-    </summary>
-    
-    
-      <category term="Spring" scheme="http://beginlu.me/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
     <title>内存泄漏 和 内存溢出</title>
     <link href="http://beginlu.me/2016/11/21/%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%20%E5%92%8C%20%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/"/>
     <id>http://beginlu.me/2016/11/21/内存泄漏 和 内存溢出/</id>
     <published>2016-11-21T08:28:51.000Z</published>
-    <updated>2017-01-07T03:19:13.323Z</updated>
+    <updated>2017-01-07T03:19:13.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="内存泄漏-和-内存溢出"><a href="#内存泄漏-和-内存溢出" class="headerlink" title="内存泄漏 和 内存溢出"></a>内存泄漏 和 内存溢出</h1><div markdown="1" style="margin-top: 0; margin-right: 0; margin-bottom: 1.2em; margin-left: 0;"><br><br><div markdown="1" style="display: inline-block; vertical-align: baseline; line-height: 1; margin-top: 0em; margin-right: 0.125em; margin-bottom: 0em; margin-left: 0.125em; background-color: #e8e8e8; border-color: #e8e8e8; background-image: none; padding-top: 0.6em; padding-right: 0.8em; padding-bottom: 0.6em; padding-left: 0.8em; color: rgba(0 , 0 , 0 , 0.6); text-transform: none; font-weight: bold; border-radius: 0.2857rem; box-sizing: border-box; font-size: 0.7428rem;"><br><br>Java</div>
 
@@ -135,7 +140,7 @@
     <link href="http://beginlu.me/2016/11/19/HashMap%E5%8E%9F%E7%90%86/"/>
     <id>http://beginlu.me/2016/11/19/HashMap原理/</id>
     <published>2016-11-19T07:07:00.000Z</published>
-    <updated>2017-01-07T03:23:46.362Z</updated>
+    <updated>2017-01-07T03:23:46.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="HashMap原理"><a href="#HashMap原理" class="headerlink" title="HashMap原理"></a>HashMap原理</h1><div markdown="1" style="margin-top: 0; margin-right: 0; margin-bottom: 1.2em; margin-left: 0;"><br><br><div markdown="1" style="display: inline-block; vertical-align: baseline; line-height: 1; margin-top: 0em; margin-right: 0.125em; margin-bottom: 0em; margin-left: 0.125em; background-color: #e8e8e8; border-color: #e8e8e8; background-image: none; padding-top: 0.6em; padding-right: 0.8em; padding-bottom: 0.6em; padding-left: 0.8em; color: rgba(0 , 0 , 0 , 0.6); text-transform: none; font-weight: bold; border-radius: 0.2857rem; box-sizing: border-box; font-size: 0.7428rem;"><br><br>Java</div>
 
@@ -172,7 +177,7 @@
     <link href="http://beginlu.me/2016/11/19/Java%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/"/>
     <id>http://beginlu.me/2016/11/19/Java的垃圾回收机制/</id>
     <published>2016-11-19T05:56:00.000Z</published>
-    <updated>2017-01-07T03:24:35.450Z</updated>
+    <updated>2017-01-07T03:24:35.000Z</updated>
     
     <content type="html"><![CDATA[<div markdown="1" style="margin: 10px 0px; padding: 0px; font-family: " microsoft="" yahei",="" arial,="" "courier="" new",="" courier,="" 宋体,="" monospace;="" font-size:="" 16px;="" color:="" rgb(51,="" 51,="" 51);="" font-style:="" normal;="" font-variant-ligatures:="" font-variant-caps:="" font-weight:="" letter-spacing:="" orphans:="" 2;="" text-align:="" start;="" text-indent:="" 0px;="" text-transform:="" none;="" widows:="" word-spacing:="" -webkit-text-stroke-width:="" background-color:="" rgb(255,="" 255,="" 255);="" min-height:="" 55px;"=""><br><br>Java的<a href="https://www.baidu.com/s?wd=%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6&amp;tn=44039180_cpr&amp;fenlei=mv6quAkxTZn0IZRqIHckPjm4nH00T1YdrHndPvuWmWNWPhcknvm10ZwV5Hcvrjm3rH6sPfKWUMw85HfYnjn4nH6sgvPsT6KdThsqpZwYTjCEQLGCpyw9Uz4Bmy-bIi4WUvYETgN-TLwGUv3EnHT4nj61nWb3" target="_blank" rel="external">垃圾回收</a>机制是Java虚拟机提供的能力，用于在空闲时间以不定时的方式动态回收无任何引用的对象占据的内存空间。<br>需要注意的是：<a href="https://www.baidu.com/s?wd=%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6&amp;tn=44039180_cpr&amp;fenlei=mv6quAkxTZn0IZRqIHckPjm4nH00T1YdrHndPvuWmWNWPhcknvm10ZwV5Hcvrjm3rH6sPfKWUMw85HfYnjn4nH6sgvPsT6KdThsqpZwYTjCEQLGCpyw9Uz4Bmy-bIi4WUvYETgN-TLwGUv3EnHT4nj61nWb3" target="_blank" rel="external">垃圾回收</a>回收的是无任何引用的对象占据的内存空间而不是对象本身，很多人来我公司面试时，我都会问这个问题的，70%以上的人回答的含义是回收对象，实际上这是不正确的。<br>System.gc()<br>Runtime.getRuntime().gc()<br>上面的方法调用时用于显式通知JVM可以进行一次<a href="https://www.baidu.com/s?wd=%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6&amp;tn=44039180_cpr&amp;fenlei=mv6quAkxTZn0IZRqIHckPjm4nH00T1YdrHndPvuWmWNWPhcknvm10ZwV5Hcvrjm3rH6sPfKWUMw85HfYnjn4nH6sgvPsT6KdThsqpZwYTjCEQLGCpyw9Uz4Bmy-bIi4WUvYETgN-TLwGUv3EnHT4nj61nWb3" target="_blank" rel="external">垃圾回收</a>，但真正垃圾回收机制具体在什么时间点开始发生动作这同样是不可预料的，这和抢占式的线程在发生作用时的原理一样。<br></div>
 ]]></content>
@@ -193,7 +198,7 @@
     <link href="http://beginlu.me/2016/11/17/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%89%E5%A4%A7%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%8C%E4%BA%94%E5%A4%A7%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/"/>
     <id>http://beginlu.me/2016/11/17/面向对象三大基本特性，五大基本原则/</id>
     <published>2016-11-17T09:21:51.000Z</published>
-    <updated>2017-01-07T03:19:41.508Z</updated>
+    <updated>2017-01-07T03:19:41.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="面向对象三大基本特性-五大基本原则"><a href="#面向对象三大基本特性-五大基本原则" class="headerlink" title="面向对象三大基本特性,五大基本原则"></a><a href="http://www.cnblogs.com/hnrainll/archive/2012/09/18/2690846.html" target="_blank" rel="external">面向对象三大基本特性,五大基本原则</a></h1><div markdown="1" style="margin: 0px; padding: 0px; color: rgb(0, 0, 0); font-size: 14px; font-family: 'Helvetica Neue', Helvetica, Verdana, Arial, sans-serif; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;"><br><br><div markdown="1" style="margin: 0px 0px 20px; padding: 0px; word-break: break-word;"><br><br>透切理解面向对象三大基本特性是理解面向对象五大基本原则的基础.<br><br><br>三大特性是：封装,继承,多态<br><br>所谓封装，也就是把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。封装是面向对象的特征之一，是对象和类概念的主要特性。 简单的说，一个类就是一个封装了数据以及操作这些数据的代码的逻辑实体。在一个对象内部，某些代码或某些数据可以是私有的，不能被外界访问。通过这种方式，对象对内部数据提供了不同级别的保护，以防止程序中无关的部分意外的改变或错误的使用了对象的私有部分。<br><br><br>所谓继承是指可以让某个类型的对象获得另一个类型的对象的属性的方法。它支持按级分类的概念。继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。 通过继承创建的新类称为“子类”或“派生类”，被继承的类称为“基类”、“父类”或“超类”。继承的过程，就是从一般到特殊的过程。要实现继承，可以通过“继承”（Inheritance）和“组合”（Composition）来实现。继承概念的实现方式有二类：实现继承与接口继承。实现继承是指直接使用基类的属性和方法而无需额外编码的能力；接口继承是指仅使用属性和方法的名称、但是子类必须提供实现的能力；<br><br>所谓多态就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。<br><br><br>五大基本原则<br>单一职责原则SRP(Single Responsibility Principle)<br>是指一个类的功能要单一，不能包罗万象。如同一个人一样，分配的工作不能太多，否则一天到晚虽然忙忙碌碌的，但效率却高不起来。<br><br>开放封闭原则OCP(Open－Close Principle)<br>一个模块在扩展性方面应该是开放的而在更改性方面应该是封闭的。比如：一个网络模块，原来只服务端功能，而现在要加入客户端功能，<br>那么应当在不用修改服务端功能代码的前提下，就能够增加客户端功能的实现代码，这要求在设计之初，就应当将服务端和客户端分开，公共部分抽象出来。<br><br>替换原则(the Liskov Substitution Principle LSP)<br>子类应当可以替换父类并出现在父类能够出现的任何地方。比如：公司搞年度晚会，所有员工可以参加抽奖，那么不管是老员工还是新员工，<br>也不管是总部员工还是外派员工，都应当可以参加抽奖，否则这公司就不和谐了。<br><br>依赖原则(the Dependency Inversion Principle DIP) 具体依赖抽象，上层依赖下层。假设B是较A低的模块，但B需要使用到A的功能，<br>这个时候，B不应当直接使用A中的具体类： 而应当由B定义一抽象接口，并由A来实现这个抽象接口，B只使用这个抽象接口：这样就达到<br>了依赖倒置的目的，B也解除了对A的依赖，反过来是A依赖于B定义的抽象接口。通过上层模块难以避免依赖下层模块，假如B也直接依赖A的实现，那么就可能造成循环依赖。一个常见的问题就是编译A模块时需要直接包含到B模块的cpp文件，而编译B时同样要直接包含到A的cpp文件。<br><br>接口分离原则(the Interface Segregation Principle ISP)<br>模块间要通过抽象接口隔离开，而不是通过具体的类强耦合起来<br><br></div>
 
@@ -216,7 +221,7 @@
     <link href="http://beginlu.me/2016/11/12/IntentFilter%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99/"/>
     <id>http://beginlu.me/2016/11/12/IntentFilter匹配规则/</id>
     <published>2016-11-12T06:48:00.000Z</published>
-    <updated>2017-01-07T03:24:17.967Z</updated>
+    <updated>2017-01-07T03:24:17.000Z</updated>
     
     <content type="html"><![CDATA[<p><del><a href="http://maxiang.info/#/?provider=evernote&amp;guid=101d418c-e707-4d4b-a9f6-0c506ebc7698&amp;notebook=%E9%BB%98%E8%AE%A4%E7%AC%94%E8%AE%B0%E6%9C%AC" target="_blank" rel="external">Edit</a></del><div markdown="1" style="color: #2c3f51; font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', STHeiti, 'Microsoft YaHei', 'WenQuanYi Micro Hei', SimSun, Song, sans-serif; line-height: 1.6;"></div></p>
 <h1 id="IntentFilter匹配规则"><a href="#IntentFilter匹配规则" class="headerlink" title="IntentFilter匹配规则"></a>IntentFilter匹配规则</h1><h4 id="action"><a href="#action" class="headerlink" title="action"></a>action</h4><p>一个过滤规则中可以有多个action规则.Intent中的action能够和过滤规则中的任意一个action规则相同即可匹配成功.</p>
@@ -269,7 +274,7 @@ startActivityForResult(chooserIntent,10);
     <link href="http://beginlu.me/2016/11/10/Activity%E7%9A%84%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F/"/>
     <id>http://beginlu.me/2016/11/10/Activity的启动模式/</id>
     <published>2016-11-10T06:28:51.000Z</published>
-    <updated>2017-01-07T03:20:04.997Z</updated>
+    <updated>2017-01-07T03:20:04.000Z</updated>
     
     <content type="html"><![CDATA[<p><del><a href="http://maxiang.info/#/?provider=evernote&amp;guid=dfc889c4-b90d-4a8f-8dc6-59896b675c0f&amp;notebook=" target="_blank" rel="external">Edit</a></del><div markdown="1" style="color: #2c3f51; font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', STHeiti, 'Microsoft YaHei', 'WenQuanYi Micro Hei', SimSun, Song, sans-serif; line-height: 1.6;"></div></p>
 <h1 id="Activity的启动模式"><a href="#Activity的启动模式" class="headerlink" title="Activity的启动模式"></a>Activity的启动模式</h1><p>Android中activity有四种启动模式 <strong>standard</strong>、<strong>singleTop</strong>、<strong>singleTask</strong>、<strong>singleInstance</strong></p>
@@ -337,38 +342,11 @@ startActivity(intent);
   </entry>
   
   <entry>
-    <title>简单的自定义 View</title>
-    <link href="http://beginlu.me/2016/11/01/%E7%AE%80%E5%8D%95%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89%20View/"/>
-    <id>http://beginlu.me/2016/11/01/简单的自定义 View/</id>
-    <published>2016-11-01T12:33:00.000Z</published>
-    <updated>2017-01-07T03:17:53.985Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="简单的自定义-View"><a href="#简单的自定义-View" class="headerlink" title="简单的自定义 View"></a>简单的自定义 View</h1><h2 id="重写-View-的-onDraw-方法"><a href="#重写-View-的-onDraw-方法" class="headerlink" title="重写 View 的 onDraw 方法"></a>重写 View 的 onDraw 方法</h2><p>可以通过重写 View 的 onDraw 方法在 View 中绘制自己想要的样式</p>
-<p>eg：在 View 中绘制一个圆形</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onDraw(canvas);</div><div class="line">    <span class="keyword">int</span> width = getWidth() - getPaddingLeft() - getPaddingRight();<span class="comment">//获取布局的可绘制的宽度</span></div><div class="line">    <span class="keyword">int</span> height = getHeight() - getPaddingTop() - getPaddingBottom();<span class="comment">//获取布局可绘制的高度</span></div><div class="line">    <span class="keyword">int</span> radius = Math.min(width, height) / <span class="number">2</span>;</div><div class="line">    canvas.drawCircle(getPaddingLeft() + width / <span class="number">2</span>, getPaddingTop() + height / <span class="number">2</span>, radius, mPaint);<span class="comment">//绘制一个圆形.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="自定义属性"><a href="#自定义属性" class="headerlink" title="自定义属性"></a>自定义属性</h2><p>在<code>res/values/</code>下新建一个<code>attrs_vier1.xml</code>文件.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"View1"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"view1_color"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span><span class="comment">&lt;!--属性名为 view1_color 属性类型为 color--&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure>
-<h2 id="使用自定义属性"><a href="#使用自定义属性" class="headerlink" title="使用自定义属性"></a>使用自定义属性</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">com.lu.ipc.view.View1</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/view1"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"#111111"</span></div><div class="line">    <span class="attr">app:view1_color</span>=<span class="string">"#a71766"</span> /&gt;</div></pre></td></tr></table></figure>
-<h2 id="获取自定义的属性"><a href="#获取自定义的属性" class="headerlink" title="获取自定义的属性"></a>获取自定义的属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">View1</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.View1);</div><div class="line">    mColor = a.getColor(R.styleable.View1_view1_color, Color.RED);<span class="comment">//获取自定义属性.</span></div><div class="line">    a.recycle();</div><div class="line">    mPaint.setColor(mColor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;简单的自定义-View&quot;&gt;&lt;a href=&quot;#简单的自定义-View&quot; class=&quot;headerlink&quot; title=&quot;简单的自定义 View&quot;&gt;&lt;/a&gt;简单的自定义 View&lt;/h1&gt;&lt;h2 id=&quot;重写-View-的-onDraw-方法&quot;&gt;&lt;a href=
-    
-    </summary>
-    
-    
-      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
     <title>View的基本知识</title>
     <link href="http://beginlu.me/2016/11/01/View%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/"/>
     <id>http://beginlu.me/2016/11/01/View的基本知识/</id>
     <published>2016-11-01T12:33:00.000Z</published>
-    <updated>2017-01-07T03:25:27.467Z</updated>
+    <updated>2017-01-07T03:25:27.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="View的基本知识"><a href="#View的基本知识" class="headerlink" title="View的基本知识"></a>View的基本知识</h1><h2 id="基本参数"><a href="#基本参数" class="headerlink" title="基本参数"></a>基本参数</h2><h3 id="位置参数"><a href="#位置参数" class="headerlink" title="位置参数"></a>位置参数</h3><p>top left 左上角的坐标</p>
 <p>bottom right 右下角的坐标</p>
@@ -411,11 +389,38 @@ startActivity(intent);
   </entry>
   
   <entry>
+    <title>简单的自定义 View</title>
+    <link href="http://beginlu.me/2016/11/01/%E7%AE%80%E5%8D%95%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89%20View/"/>
+    <id>http://beginlu.me/2016/11/01/简单的自定义 View/</id>
+    <published>2016-11-01T12:33:00.000Z</published>
+    <updated>2017-01-07T03:17:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简单的自定义-View"><a href="#简单的自定义-View" class="headerlink" title="简单的自定义 View"></a>简单的自定义 View</h1><h2 id="重写-View-的-onDraw-方法"><a href="#重写-View-的-onDraw-方法" class="headerlink" title="重写 View 的 onDraw 方法"></a>重写 View 的 onDraw 方法</h2><p>可以通过重写 View 的 onDraw 方法在 View 中绘制自己想要的样式</p>
+<p>eg：在 View 中绘制一个圆形</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onDraw(canvas);</div><div class="line">    <span class="keyword">int</span> width = getWidth() - getPaddingLeft() - getPaddingRight();<span class="comment">//获取布局的可绘制的宽度</span></div><div class="line">    <span class="keyword">int</span> height = getHeight() - getPaddingTop() - getPaddingBottom();<span class="comment">//获取布局可绘制的高度</span></div><div class="line">    <span class="keyword">int</span> radius = Math.min(width, height) / <span class="number">2</span>;</div><div class="line">    canvas.drawCircle(getPaddingLeft() + width / <span class="number">2</span>, getPaddingTop() + height / <span class="number">2</span>, radius, mPaint);<span class="comment">//绘制一个圆形.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="自定义属性"><a href="#自定义属性" class="headerlink" title="自定义属性"></a>自定义属性</h2><p>在<code>res/values/</code>下新建一个<code>attrs_vier1.xml</code>文件.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"View1"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"view1_color"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span><span class="comment">&lt;!--属性名为 view1_color 属性类型为 color--&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="使用自定义属性"><a href="#使用自定义属性" class="headerlink" title="使用自定义属性"></a>使用自定义属性</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">com.lu.ipc.view.View1</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/view1"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"#111111"</span></div><div class="line">    <span class="attr">app:view1_color</span>=<span class="string">"#a71766"</span> /&gt;</div></pre></td></tr></table></figure>
+<h2 id="获取自定义的属性"><a href="#获取自定义的属性" class="headerlink" title="获取自定义的属性"></a>获取自定义的属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">View1</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.View1);</div><div class="line">    mColor = a.getColor(R.styleable.View1_view1_color, Color.RED);<span class="comment">//获取自定义属性.</span></div><div class="line">    a.recycle();</div><div class="line">    mPaint.setColor(mColor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;简单的自定义-View&quot;&gt;&lt;a href=&quot;#简单的自定义-View&quot; class=&quot;headerlink&quot; title=&quot;简单的自定义 View&quot;&gt;&lt;/a&gt;简单的自定义 View&lt;/h1&gt;&lt;h2 id=&quot;重写-View-的-onDraw-方法&quot;&gt;&lt;a href=
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Android 事件分发流</title>
     <link href="http://beginlu.me/2016/08/21/Android%20%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%B5%81/"/>
     <id>http://beginlu.me/2016/08/21/Android 事件分发流/</id>
     <published>2016-08-21T03:59:00.000Z</published>
-    <updated>2017-01-07T03:20:43.835Z</updated>
+    <updated>2017-01-07T03:20:43.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="Android-事件分发流"><a href="#Android-事件分发流" class="headerlink" title="Android 事件分发流"></a>Android 事件分发流</h1><p>ACTION_DOWN</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/966283-b9cb65aceea9219b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
@@ -441,7 +446,7 @@ startActivity(intent);
     <link href="http://beginlu.me/2016/08/21/Android%20%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%20%EF%BC%88IPC%EF%BC%89/"/>
     <id>http://beginlu.me/2016/08/21/Android 多进程通信 （IPC）/</id>
     <published>2016-08-21T03:59:00.000Z</published>
-    <updated>2017-01-07T03:22:25.165Z</updated>
+    <updated>2017-01-07T03:22:25.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="开启多进程"><a href="#开启多进程" class="headerlink" title="开启多进程"></a>开启多进程</h2><p>在四大组件（Activity，Service，Receiver，ContentProvider）中指定 android:process 属性</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span></span></div><div class="line">    <span class="attr">android:name</span>=<span class="string">".activity.TwoActivity"</span></div><div class="line">    <span class="attr">android:configChanges</span>=<span class="string">"screenLayout"</span></div><div class="line">    <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></div><div class="line">    <span class="attr">android:process</span>=<span class="string">":remote"</span> /&gt;</div></pre></td></tr></table></figure>
@@ -489,7 +494,7 @@ startActivity(intent);
 <p><strong>MainActivity.java</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Messenger mGetReplyMessenger = <span class="keyword">new</span> Messenger(<span class="keyword">new</span> MessengerHandler());</div><div class="line">    <span class="keyword">private</span> Messenger mMessenger = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="comment">//接收并处理 Service 传来的消息</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MessengerHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">            <span class="keyword">switch</span> (msg.what) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">                    Log.d(<span class="string">"reply"</span>, msg.getData().getString(<span class="string">"reply"</span>));<span class="comment">//获取消息内容并输出 log</span></div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    <span class="keyword">super</span>.handleMessage(msg);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> ServiceConnection mConnection = <span class="keyword">new</span> ServiceConnection() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="comment">//绑定成功后的回调</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</div><div class="line">            mMessenger = <span class="keyword">new</span> Messenger(service);<span class="comment">//获取 Messenger</span></div><div class="line">            Message msg = Message.obtain(<span class="keyword">null</span>, <span class="number">1</span>);<span class="comment">//创建消息</span></div><div class="line">            Bundle data = <span class="keyword">new</span> Bundle();<span class="comment">//创建 Bundle</span></div><div class="line">            data.putString(<span class="string">"msg"</span>, <span class="string">"hello"</span>);<span class="comment">//为 Bundle 添加内容</span></div><div class="line">            msg.setData(data);<span class="comment">//为消息添加 Bundle</span></div><div class="line">            msg.replyTo = mGetReplyMessenger;<span class="comment">//为消息添加reply</span></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                mMessenger.send(msg);<span class="comment">//发送消息到 Service</span></div><div class="line">            &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, BookService.class);</div><div class="line">        bindService(intent, mConnection, BIND_AUTO_CREATE);<span class="comment">//绑定消息并设置绑定成功回调</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>运行结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">08-11 15:28:13.797 28106-28106/com.lu.ipc:remote D/BookService: msg:hello</div><div class="line">08-11 15:28:13.826 27925-27925/com.lu.ipc D/reply: world</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">08-11 15:28:13.797 28106-28106/com.lu.ipc:remote D/BookService: msg:hello</div><div class="line">08-11 15:28:13.826 27925-27925/com.lu.ipc D/reply: world</div></pre></td></tr></table></figure>
 <p>附上 Messenger 通信的工作原理图</p>
 <p><img src="/content/images/2016/08/-----2016-08-11-15-42-15.png" alt=""></p>
 <h3 id="使用AIDL"><a href="#使用AIDL" class="headerlink" title="使用AIDL"></a>使用AIDL</h3><h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><p>服务端需要创建一个 Service 用来监听客户端的连接请求,然后创建一个AIDL 文件,AIDL 中声明需要暴率给客户端的接口,再 Service 中实现 AIDL 接口</p>
@@ -521,7 +526,7 @@ startActivity(intent);
 <p>客户端实现 <strong>ThreeActivity.java</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreeActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> IBookManager bookManager = <span class="keyword">null</span>;<span class="comment">//服务器 binder</span></div><div class="line">    <span class="keyword">private</span> ServiceConnection mConnection = <span class="keyword">new</span> ServiceConnection() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;<span class="comment">//启动并绑定服务后被调用</span></div><div class="line">            bookManager = IBookManager.Stub.asInterface(service);<span class="comment">//获取并保存服务器 binder</span></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                bookManager.registerListener(mOnNewBookArrivedListener);<span class="comment">//注册监听.</span></div><div class="line">            &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">//客户端回调.在服务端执行onNewBookArrived 时被调用</span></div><div class="line">    <span class="keyword">private</span> IOnNewBookArrivedListener mOnNewBookArrivedListener = <span class="keyword">new</span> IOnNewBookArrivedListener.Stub() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNewBookArrived</span><span class="params">(Book newBook)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</div><div class="line">            Log.d(<span class="string">"TwoActivity"</span>, newBook.bookId + <span class="string">""</span>);<span class="comment">//输出 log</span></div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_two);</div><div class="line"></div><div class="line">        findViewById(R.id.button).setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    bookManager.addBook(<span class="keyword">new</span> Book(<span class="number">10</span>));<span class="comment">//点击按钮后往服务器添加一个Book</span></div><div class="line">                &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        Intent intent = <span class="keyword">new</span> Intent(ThreeActivity.<span class="keyword">this</span>, BookManagerService.class);</div><div class="line">        bindService(intent, mConnection, BIND_AUTO_CREATE);<span class="comment">//绑定服务.设置绑定成功后的回调</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>运行代码后点击按钮就可以看到有输出 log 信息.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">08-12 17:59:42.114 13209-13209/com.lu.ipc:remote D/TwoActivity: 10</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">08-12 17:59:42.114 13209-13209/com.lu.ipc:remote D/TwoActivity: 10</div></pre></td></tr></table></figure>
 <p><strong>注意：在客户端中调用服务端的方法是在 UI 线程中操作的.如果服务端中执行的是一个耗时操作的话很有可能会产生 ANR（应用程序无响应）所以需要移到非 UI 线程中执行</strong></p>
 <p>还有…因为回调方法其实是运行再 Binder 中的.不能直接操作 UI 相关内容.可以通过 Handler切换到 UI 线程中再去操作 UI</p>
 <h3 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h3><p>ContentProvider是 Android 中专门用于不同应用间进行数据共享,所以它也非常适合进程间通信.他的底层实现其实也是 Binder.</p>
@@ -562,7 +567,7 @@ startActivity(intent);
     <link href="http://beginlu.me/2016/08/04/Android%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/"/>
     <id>http://beginlu.me/2016/08/04/Android动态加载/</id>
     <published>2016-08-04T12:59:00.000Z</published>
-    <updated>2017-01-07T03:15:19.823Z</updated>
+    <updated>2017-01-07T03:15:19.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近因为接口问题搞得有点头大.感觉每次因为接口变动而更新 APP 是会被用户骂死的.所以想起了 JAVA 的反射机制.也就来了一波动态加载.</p>
 <p>百度百科解释的 JAVA 反射</p>
@@ -614,7 +619,7 @@ startActivity(intent);
     <link href="http://beginlu.me/2016/07/30/%E5%88%A9%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E5%AE%9E%E6%97%B6%E7%9B%91%E6%8E%A7%E7%9A%84%E9%81%A5%E6%8E%A7%E5%B0%8F%E8%BD%A6/"/>
     <id>http://beginlu.me/2016/07/30/利用树莓派制作一个实时监控的遥控小车/</id>
     <published>2016-07-30T07:28:51.000Z</published>
-    <updated>2017-01-07T03:16:31.057Z</updated>
+    <updated>2017-01-07T03:16:31.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="/content/images/2016/07/Screenshot_2016-07-22-19-16-26-543_com-lu-che.jpg" style="float:left" width="30%"><img src="/content/images/2016/07/6AC706DD27F6C6B063DF0D6EBE5D5FC3.jpg" width="30%/"></p>
 <p>先上一波成果图</p>
@@ -668,7 +673,7 @@ startActivity(intent);
     <link href="http://beginlu.me/2016/05/01/idea%E9%85%8D%E7%BD%AEspring%20mvc/"/>
     <id>http://beginlu.me/2016/05/01/idea配置spring mvc/</id>
     <published>2016-05-01T14:21:25.000Z</published>
-    <updated>2017-01-07T03:16:08.215Z</updated>
+    <updated>2017-01-07T03:16:08.000Z</updated>
     
     <content type="html"><![CDATA[<p>#####1.新建项目<br>选择 Maven<br>勾选上 Create from archetype<br>选择 org.apache.maven.archetypes:maven-archetype-webapp</p>
 <p><img src="/content/images/2016/04/-----2016-04-24-15-49-09.png" alt=""></p>
@@ -709,7 +714,7 @@ startActivity(intent);
     <link href="http://beginlu.me/2016/04/27/DrawerLayout%EF%BC%88%E4%BE%A7%E6%BB%91%E8%8F%9C%E5%8D%95%EF%BC%89/"/>
     <id>http://beginlu.me/2016/04/27/DrawerLayout（侧滑菜单）/</id>
     <published>2016-04-27T13:21:00.000Z</published>
-    <updated>2017-01-07T03:23:23.919Z</updated>
+    <updated>2017-01-07T03:23:23.000Z</updated>
     
     <content type="html"><![CDATA[<p>首先在 AS 中引入Material Design Support 包</p>
 <en-media hash="5b4abc55aa98461b6500d504b04c8f3e" type="image/png" style="width: 347px; height: auto;">
@@ -741,57 +746,11 @@ startActivity(intent);
   </entry>
   
   <entry>
-    <title>TabLayout（切换卡）使用</title>
-    <link href="http://beginlu.me/2016/04/27/TabLayout%EF%BC%88%E5%88%87%E6%8D%A2%E5%8D%A1%EF%BC%89%E4%BD%BF%E7%94%A8/"/>
-    <id>http://beginlu.me/2016/04/27/TabLayout（切换卡）使用/</id>
-    <published>2016-04-27T12:35:00.000Z</published>
-    <updated>2017-01-07T03:25:24.317Z</updated>
-    
-    <content type="html"><![CDATA[<p>首先在 AS 中引入Material Design Support 包</p>
-<en-media hash="5b4abc55aa98461b6500d504b04c8f3e" type="image/png" style="width: 347px; height: auto;">
-
-<p>在布局文件中使用 TabLayout</p>
-<en-media hash="dfe82bad680d863e27826d8b3b257894" type="image/png" style="width: 324px; height: auto;">
-
-<p>JAVA 文件中获取控件</p>
-<en-media hash="7a9ca3ad6bf18bd8d8ae8a88472664ef" type="image/png" style="width: 403px; height: auto;">
-
-<p>设置适配器.绑定视图</p>
-<en-media hash="8a49f06c5dbcbb4f7c6e591afcc0c438" type="image/png" style="width: 318px; height: auto;">
-
-<p>适配器</p>
-<en-media hash="ea6912fbf408c3ba46e22c14d670d8ba" type="image/png" style="width: 793px; height: auto;">
-
-<p>vpMain 是绑定的视图.</p>
-<p>创建视图</p>
-<en-media hash="389c3fe28812497a5eb8763a40c44007" type="image/png" style="width: 290px; height: auto;">
-
-<p>为 vpMain 设置同一个适配器并添加监听方法.具体 ViewPager 使用可以参考</p>
-<p><a href="http://developer.android.com/intl/zh-cn/reference/android/support/v4/view/ViewPager.html" target="_blank" rel="external">http://developer.android.com/intl/zh-cn/reference/android/support/v4/view/ViewPager.html</a></p>
-<en-media hash="414c18b8c9ff20ce9d33e5a96d9aba23" type="image/png" style="width: 786px; height: auto;">
-
-
-
-</en-media></en-media></en-media></en-media></en-media></en-media></en-media>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;首先在 AS 中引入Material Design Support 包&lt;/p&gt;
-&lt;en-media hash=&quot;5b4abc55aa98461b6500d504b04c8f3e&quot; type=&quot;image/png&quot; style=&quot;width: 347px; height: a
-    
-    </summary>
-    
-    
-      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
     <title>ListView ScrollView 不得不说的一些事</title>
     <link href="http://beginlu.me/2016/01/23/ListView%20ScrollView%20%E4%B8%8D%E5%BE%97%E4%B8%8D%E8%AF%B4%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BA%8B/"/>
     <id>http://beginlu.me/2016/01/23/ListView ScrollView 不得不说的一些事/</id>
     <published>2016-01-22T16:20:00.000Z</published>
-    <updated>2017-01-07T03:09:22.863Z</updated>
+    <updated>2017-01-07T03:09:22.000Z</updated>
     
     <content type="html"><![CDATA[<p>因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.<br>很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案</p>
 <h1 id="ScrollView-中嵌套-ListView"><a href="#ScrollView-中嵌套-ListView" class="headerlink" title="ScrollView 中嵌套 ListView"></a>ScrollView 中嵌套 ListView</h1><h2 id="1-将-ListView-之外的部分作为-ListView-中的一部分"><a href="#1-将-ListView-之外的部分作为-ListView-中的一部分" class="headerlink" title="1.将 ListView 之外的部分作为 ListView 中的一部分."></a>1.将 ListView 之外的部分作为 ListView 中的一部分.</h2><p>这个方法是在getView中对 position 进行判断并处理。<br>这个方法能满足几乎所有的情况，但是这样的话在 Adapter 中 getView 方法里的代码就过于复杂了。</p>
@@ -818,7 +777,7 @@ startActivity(intent);
     <link href="http://beginlu.me/2015/12/31/2015%E5%B9%B4%E6%80%BB%E7%BB%93/"/>
     <id>http://beginlu.me/2015/12/31/2015年总结/</id>
     <published>2015-12-31T15:17:00.000Z</published>
-    <updated>2017-01-07T03:09:44.971Z</updated>
+    <updated>2017-01-07T03:09:44.000Z</updated>
     
     <content type="html"><![CDATA[<p>首先，仔细回想了一下这一年，用一个词来形容的话就是荒废。<br>这一年，我开发了第一款属于自己独立开发的 APP，第一次对某公司现有 APP 进行了短期的更新与维护，第一次去学习 Android 开发以外其它的开发技术……<br>虽然这一年我有很多的第一次，但是真在的感觉到了自己的荒废。没有了最初学习的那种努力，开始无意义无目的的学习。没有了以前熬夜编码的精力，开始纠结自己的身体状况。<br>这一年做了很多，但是远没有我想像中收获的那么多，很多时候看到某某公司招聘要求是3年以上开发经验，但是我这一年下来并没有感觉我的提升有我想象中那么大。我不知道用这样的进度，两年后我的 Android 技能树能点到多少，因为我知道，越到后面，提升越难。<br>这一年，我仅仅只是在去年的基础上学会了 Android 中在我看来极小部分的知识<br>这一年，我仅仅是了解了 javaweb 开发的一些基本知识<br>这一年，我仅仅是学了很多 但会的不多<br>作为程序员，我这一年只做了这些。<br>作为一个学生，我只能说我的大学生活过去一半了，英语也还一直是挂，时间也越来越不够用了。<br>希望我明年能在 Android 开发方面再有突破，对 Linux 和 C 语言进行更系统的学习，开始涉及 Android 底层方面的开发，在 Android开发这条路上能越走越远。<br>希望我明年也能对自己好好的，少熬夜，少熬夜，少熬夜！</p>
 ]]></content>
@@ -831,6 +790,74 @@ startActivity(intent);
     
     
       <category term="瞎扯" scheme="http://beginlu.me/tags/%E7%9E%8E%E6%89%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记一次接口开发</title>
+    <link href="http://beginlu.me/2015/11/05/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91/"/>
+    <id>http://beginlu.me/2015/11/05/记一次接口开发/</id>
+    <published>2015-11-04T19:20:00.000Z</published>
+    <updated>2017-01-07T03:06:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最开始写这个接口的时候是发现了这个网站登录的一个小 bug，可以不验证验证码来完成登录操作。</p>
+<p>然后因为一些原因，网站方面发现了这个bug 并进行了修复。所以我就不得不进行验证码的识别。</p>
+<p>写了好了验证码的识别，发现识别成功率也有百分之八十以上，就准备写进接口当中。可是发现还是会一直提示验证码错误，然后我纠结了很久都没有想明白到底是为什么。</p>
+<p>然后突然想起来了验证码的验证机制，是通过 Session 来判断的。所以我应当在获取验证码的时候保存 SessionId 然后之后的访问都通过这个 Session 来进行。</p>
+<p>总结：好好学后台、、</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最开始写这个接口的时候是发现了这个网站登录的一个小 bug，可以不验证验证码来完成登录操作。&lt;/p&gt;
+&lt;p&gt;然后因为一些原因，网站方面发现了这个bug 并进行了修复。所以我就不得不进行验证码的识别。&lt;/p&gt;
+&lt;p&gt;写了好了验证码的识别，发现识别成功率也有百分之八十以上，就准
+    
+    </summary>
+    
+    
+      <category term="Java" scheme="http://beginlu.me/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android Navigation的使用</title>
+    <link href="http://beginlu.me/2015/08/10/Android%20Navigation/"/>
+    <id>http://beginlu.me/2015/08/10/Android Navigation/</id>
+    <published>2015-08-10T14:44:00.000Z</published>
+    <updated>2017-01-07T03:14:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>昨天发现谷歌提供Navigation这么一个东西。可以实现侧滑菜单……</p>
+<p>然后看了会文档……不知道是我没看全还是什么原因，感觉文档写的还是挺不错的，但是我也写下好了。</p>
+<p>首先。上布局文件。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">android.support.v4.widget.DrawerLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>= <span class="string">http://schemas.android.com/apk/res/android</span></div><div class="line">    <span class="attr">android:id</span>= <span class="string">@+id/drawer_layout</span></div><div class="line">    <span class="attr">android:layout_width</span>= <span class="string">match_parent</span></div><div class="line">    <span class="attr">android:layout_height</span>= <span class="string">match_parent</span> &gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">FrameLayout</span></span></div><div class="line">        <span class="attr">android:id</span>= <span class="string">@+id/content_frame</span></div><div class="line">        <span class="attr">android:layout_width</span>= <span class="string">match_parent</span></div><div class="line">        <span class="attr">android:layout_height</span>= <span class="string">match_parent</span>  /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ListView</span></span></div><div class="line">        <span class="attr">android:id</span>= <span class="string">@+id/left_drawer</span></div><div class="line">        <span class="attr">android:layout_width</span>= <span class="string">240dp</span></div><div class="line">        <span class="attr">android:layout_height</span>= <span class="string">match_parent</span></div><div class="line">        <span class="attr">android:layout_gravity</span>= <span class="string">start</span></div><div class="line">        <span class="attr">android:choiceMode</span>= <span class="string">singleChoice</span></div><div class="line">        <span class="attr">android:divider</span>= <span class="string">@android:color/transparent</span></div><div class="line">        <span class="attr">android:dividerHeight</span>= <span class="string">0dp</span></div><div class="line">        <span class="attr">android:background</span>= <span class="string">#111</span> /&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">android.support.v4.widget.DrawerLayout</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>昂。没错。这就是官方的布局文件。</p>
+<p>我要说的就是。这里的ListView可以换成任意的Layout。但是要注意的就是它的宽不要超过320dp。高度必须match_parent</p>
+<p>昂。然后你就可以运行了。会有一个侧滑菜单的，但是里面就是黑黑的一片。什么都没有。</p>
+<p>然后就是注意一些属性了。</p>
+<p>layout_gravity 这个属性<br>昂，其实这个我没太看懂，就直接上官方原话好了。。抽屉视图(视图)必须指定它的水平重力与android:layout_gravity属性。支持从右到左的语言(RTL),指定&#20540;与“开始”而不是“左”(右边的抽屉里出现时,布局是RTL)。</p>
+<p>然后关于侧滑菜单里面的一些操作就可以写在Java文件中了。</p>
+<p>我在说下FrameLayout的使用好了。</p>
+<p>其实这个我还不太懂。只是知道让Activity继承FragmentActivity然后使用如下代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FragmentManager fragmentManager =getSupportFragmentManager();</div><div class="line">HomeFragment homeFragment = <span class="keyword">new</span> HomeFragment();</div><div class="line">fragmentManager.beginTransaction().replace(R.id.framelayout, homeFragment).commit();</div></pre></td></tr></table></figure></p>
+<p>就可以吧HomeFragment添加到这个FrameLayout里面了。</p>
+<p>昂。大概也就这些。哦。还有打开和关闭。。</p>
+<p>打开：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mDrawerLayout.openDrawer(mLeftMenu);</div></pre></td></tr></table></figure>
+<p>mDrawerLayout就是DrawerLayout这个控件。然后mLeftMent就是ListView这个控件。。</p>
+<p>关闭</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mDrawerLayout.closeDrawers();</div></pre></td></tr></table></figure>
+<p>示例代码：<a href="http://download.csdn.net/detail/mcdull_lu/8987981" target="_blank" rel="external">点击打开链接</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;昨天发现谷歌提供Navigation这么一个东西。可以实现侧滑菜单……&lt;/p&gt;
+&lt;p&gt;然后看了会文档……不知道是我没看全还是什么原因，感觉文档写的还是挺不错的，但是我也写下好了。&lt;/p&gt;
+&lt;p&gt;首先。上布局文件。&lt;br&gt;&lt;figure class=&quot;highlight ht
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
     
   </entry>
   
