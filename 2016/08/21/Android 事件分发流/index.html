@@ -379,7 +379,25 @@
                 <!-- Post Content -->
                 <div id="post-content" class="markdown-Github mdl-color-text--grey-700 mdl-card__supporting-text fade out">
 	
-		<h1 id="Android-事件分发流"><a href="#Android-事件分发流" class="headerlink" title="Android 事件分发流"></a>Android 事件分发流</h1><p>ACTION_DOWN</p>
+		<h1 id="Android-事件分发流"><a href="#Android-事件分发流" class="headerlink" title="Android 事件分发流"></a>Android 事件分发流</h1><p>事件分发需要View的三个重要方法来共同完成：</p>
+<ol>
+<li><p>public boolean dispatchTouchEvent(MotionEvent event)<br>通过方法名我们不难猜测，它就是事件分发的重要方法。那么很明显，如果一个MotionEvent传递给了View，那么dispatchTouchEvent方法一定会被调用！<br>返回值：表示是否消费了当前事件。可能是View本身的onTouchEvent方法消费，也可能是子View的dispatchTouchEvent方法中消费。返回true表示事件被消费，本次的事件终止。返回false表示View以及子View均没有消费事件，将调用父View的onTouchEvent方法</p>
+</li>
+<li><p>public boolean onInterceptTouchEvent(MotionEvent ev)<br>事件拦截，当一个ViewGroup在接到MotionEvent事件序列时候，首先会调用此方法判断是否需要拦截。特别注意，这是ViewGroup特有的方法，View并没有拦截方法<br>返回值：是否拦截事件传递，返回true表示拦截了事件，那么事件将不再向下分发而是调用View本身的onTouchEvent方法。返回false表示不做拦截，事件将向下分发到子View的dispatchTouchEvent方法。</p>
+</li>
+<li><p>public boolean onTouchEvent(MotionEvent ev)<br>真正对MotionEvent进行处理或者说消费的方法。在dispatchTouchEvent进行调用。<br>返回值：返回true表示事件被消费，本次的事件终止。返回false表示事件没有被消费，将调用父View的onTouchEvent方法</p>
+</li>
+</ol>
+<p>但是这里有三点需要特别强调一下</p>
+<ol>
+<li><p>子View可以通过requestDisallowInterceptTouchEvent方法干预父View的事件分发过程（ACTION_DOWN事件除外），如果父容器需要获取点击事件则调用 parent.requestDisallowInterceptTouchEvent(false)方法，让父容器去拦截事件。</p>
+</li>
+<li><p>对于View（注意！ViewGroup也是View）而言，如果设置了onTouchListener，那么OnTouchListener方法中的onTouch方法会被回调。onTouch方法返回true，则onTouchEvent方法不会被调用（onClick事件是在onTouchEvent中调用）所以三者优先级是onTouch-&gt;onTouchEvent-&gt;onClick</p>
+</li>
+<li><p>View 的onTouchEvent 方法默认都会消费掉事件（返回true），除非它是不可点击的（clickable和longClickable同时为false），View的longClickable默认为false，clickable需要区分情况，如Button的clickable默认为true，而TextView的clickable默认为false。</p>
+</li>
+</ol>
+<p>ACTION_DOWN</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/966283-b9cb65aceea9219b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>ACTION_MOVE ACTION_UP</p>
 <p>在哪个View的onTouchEvent 返回true，那么ACTION_MOVE和ACTION_UP的事件从上往下传到这个View后就不再往下传递了，而直接传给自己的onTouchEvent 并结束本次事件传递过程。</p>
@@ -406,7 +424,7 @@
     
     <!-- Prev Nav -->
     
-        <a href="/2016/11/01/简单的自定义 View/" id="post_nav-newer" class="prev-content">
+        <a href="/2016/11/01/View的基本知识/" id="post_nav-newer" class="prev-content">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_back</i>
             </button>

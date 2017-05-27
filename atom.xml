@@ -342,6 +342,33 @@ startActivity(intent);
   </entry>
   
   <entry>
+    <title>简单的自定义 View</title>
+    <link href="http://beginlu.me/2016/11/01/%E7%AE%80%E5%8D%95%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89%20View/"/>
+    <id>http://beginlu.me/2016/11/01/简单的自定义 View/</id>
+    <published>2016-11-01T12:33:00.000Z</published>
+    <updated>2017-01-07T03:17:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简单的自定义-View"><a href="#简单的自定义-View" class="headerlink" title="简单的自定义 View"></a>简单的自定义 View</h1><h2 id="重写-View-的-onDraw-方法"><a href="#重写-View-的-onDraw-方法" class="headerlink" title="重写 View 的 onDraw 方法"></a>重写 View 的 onDraw 方法</h2><p>可以通过重写 View 的 onDraw 方法在 View 中绘制自己想要的样式</p>
+<p>eg：在 View 中绘制一个圆形</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onDraw(canvas);</div><div class="line">    <span class="keyword">int</span> width = getWidth() - getPaddingLeft() - getPaddingRight();<span class="comment">//获取布局的可绘制的宽度</span></div><div class="line">    <span class="keyword">int</span> height = getHeight() - getPaddingTop() - getPaddingBottom();<span class="comment">//获取布局可绘制的高度</span></div><div class="line">    <span class="keyword">int</span> radius = Math.min(width, height) / <span class="number">2</span>;</div><div class="line">    canvas.drawCircle(getPaddingLeft() + width / <span class="number">2</span>, getPaddingTop() + height / <span class="number">2</span>, radius, mPaint);<span class="comment">//绘制一个圆形.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="自定义属性"><a href="#自定义属性" class="headerlink" title="自定义属性"></a>自定义属性</h2><p>在<code>res/values/</code>下新建一个<code>attrs_vier1.xml</code>文件.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"View1"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"view1_color"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span><span class="comment">&lt;!--属性名为 view1_color 属性类型为 color--&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="使用自定义属性"><a href="#使用自定义属性" class="headerlink" title="使用自定义属性"></a>使用自定义属性</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">com.lu.ipc.view.View1</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/view1"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"#111111"</span></div><div class="line">    <span class="attr">app:view1_color</span>=<span class="string">"#a71766"</span> /&gt;</div></pre></td></tr></table></figure>
+<h2 id="获取自定义的属性"><a href="#获取自定义的属性" class="headerlink" title="获取自定义的属性"></a>获取自定义的属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">View1</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.View1);</div><div class="line">    mColor = a.getColor(R.styleable.View1_view1_color, Color.RED);<span class="comment">//获取自定义属性.</span></div><div class="line">    a.recycle();</div><div class="line">    mPaint.setColor(mColor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;简单的自定义-View&quot;&gt;&lt;a href=&quot;#简单的自定义-View&quot; class=&quot;headerlink&quot; title=&quot;简单的自定义 View&quot;&gt;&lt;/a&gt;简单的自定义 View&lt;/h1&gt;&lt;h2 id=&quot;重写-View-的-onDraw-方法&quot;&gt;&lt;a href=
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
     <title>View的基本知识</title>
     <link href="http://beginlu.me/2016/11/01/View%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/"/>
     <id>http://beginlu.me/2016/11/01/View的基本知识/</id>
@@ -389,40 +416,31 @@ startActivity(intent);
   </entry>
   
   <entry>
-    <title>简单的自定义 View</title>
-    <link href="http://beginlu.me/2016/11/01/%E7%AE%80%E5%8D%95%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89%20View/"/>
-    <id>http://beginlu.me/2016/11/01/简单的自定义 View/</id>
-    <published>2016-11-01T12:33:00.000Z</published>
-    <updated>2017-01-07T03:17:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="简单的自定义-View"><a href="#简单的自定义-View" class="headerlink" title="简单的自定义 View"></a>简单的自定义 View</h1><h2 id="重写-View-的-onDraw-方法"><a href="#重写-View-的-onDraw-方法" class="headerlink" title="重写 View 的 onDraw 方法"></a>重写 View 的 onDraw 方法</h2><p>可以通过重写 View 的 onDraw 方法在 View 中绘制自己想要的样式</p>
-<p>eg：在 View 中绘制一个圆形</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onDraw(canvas);</div><div class="line">    <span class="keyword">int</span> width = getWidth() - getPaddingLeft() - getPaddingRight();<span class="comment">//获取布局的可绘制的宽度</span></div><div class="line">    <span class="keyword">int</span> height = getHeight() - getPaddingTop() - getPaddingBottom();<span class="comment">//获取布局可绘制的高度</span></div><div class="line">    <span class="keyword">int</span> radius = Math.min(width, height) / <span class="number">2</span>;</div><div class="line">    canvas.drawCircle(getPaddingLeft() + width / <span class="number">2</span>, getPaddingTop() + height / <span class="number">2</span>, radius, mPaint);<span class="comment">//绘制一个圆形.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="自定义属性"><a href="#自定义属性" class="headerlink" title="自定义属性"></a>自定义属性</h2><p>在<code>res/values/</code>下新建一个<code>attrs_vier1.xml</code>文件.</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"View1"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"view1_color"</span> <span class="attr">format</span>=<span class="string">"color"</span> /&gt;</span><span class="comment">&lt;!--属性名为 view1_color 属性类型为 color--&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure>
-<h2 id="使用自定义属性"><a href="#使用自定义属性" class="headerlink" title="使用自定义属性"></a>使用自定义属性</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">com.lu.ipc.view.View1</span></span></div><div class="line">    <span class="attr">android:id</span>=<span class="string">"@+id/view1"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"100dp"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"#111111"</span></div><div class="line">    <span class="attr">app:view1_color</span>=<span class="string">"#a71766"</span> /&gt;</div></pre></td></tr></table></figure>
-<h2 id="获取自定义的属性"><a href="#获取自定义的属性" class="headerlink" title="获取自定义的属性"></a>获取自定义的属性</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">View1</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.View1);</div><div class="line">    mColor = a.getColor(R.styleable.View1_view1_color, Color.RED);<span class="comment">//获取自定义属性.</span></div><div class="line">    a.recycle();</div><div class="line">    mPaint.setColor(mColor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;简单的自定义-View&quot;&gt;&lt;a href=&quot;#简单的自定义-View&quot; class=&quot;headerlink&quot; title=&quot;简单的自定义 View&quot;&gt;&lt;/a&gt;简单的自定义 View&lt;/h1&gt;&lt;h2 id=&quot;重写-View-的-onDraw-方法&quot;&gt;&lt;a href=
-    
-    </summary>
-    
-    
-      <category term="Android" scheme="http://beginlu.me/tags/Android/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Android 事件分发流</title>
     <link href="http://beginlu.me/2016/08/21/Android%20%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%B5%81/"/>
     <id>http://beginlu.me/2016/08/21/Android 事件分发流/</id>
     <published>2016-08-21T03:59:00.000Z</published>
-    <updated>2017-01-07T03:20:43.000Z</updated>
+    <updated>2017-05-27T08:23:49.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Android-事件分发流"><a href="#Android-事件分发流" class="headerlink" title="Android 事件分发流"></a>Android 事件分发流</h1><p>ACTION_DOWN</p>
+    <content type="html"><![CDATA[<h1 id="Android-事件分发流"><a href="#Android-事件分发流" class="headerlink" title="Android 事件分发流"></a>Android 事件分发流</h1><p>事件分发需要View的三个重要方法来共同完成：</p>
+<ol>
+<li><p>public boolean dispatchTouchEvent(MotionEvent event)<br>通过方法名我们不难猜测，它就是事件分发的重要方法。那么很明显，如果一个MotionEvent传递给了View，那么dispatchTouchEvent方法一定会被调用！<br>返回值：表示是否消费了当前事件。可能是View本身的onTouchEvent方法消费，也可能是子View的dispatchTouchEvent方法中消费。返回true表示事件被消费，本次的事件终止。返回false表示View以及子View均没有消费事件，将调用父View的onTouchEvent方法</p>
+</li>
+<li><p>public boolean onInterceptTouchEvent(MotionEvent ev)<br>事件拦截，当一个ViewGroup在接到MotionEvent事件序列时候，首先会调用此方法判断是否需要拦截。特别注意，这是ViewGroup特有的方法，View并没有拦截方法<br>返回值：是否拦截事件传递，返回true表示拦截了事件，那么事件将不再向下分发而是调用View本身的onTouchEvent方法。返回false表示不做拦截，事件将向下分发到子View的dispatchTouchEvent方法。</p>
+</li>
+<li><p>public boolean onTouchEvent(MotionEvent ev)<br>真正对MotionEvent进行处理或者说消费的方法。在dispatchTouchEvent进行调用。<br>返回值：返回true表示事件被消费，本次的事件终止。返回false表示事件没有被消费，将调用父View的onTouchEvent方法</p>
+</li>
+</ol>
+<p>但是这里有三点需要特别强调一下</p>
+<ol>
+<li><p>子View可以通过requestDisallowInterceptTouchEvent方法干预父View的事件分发过程（ACTION_DOWN事件除外），如果父容器需要获取点击事件则调用 parent.requestDisallowInterceptTouchEvent(false)方法，让父容器去拦截事件。</p>
+</li>
+<li><p>对于View（注意！ViewGroup也是View）而言，如果设置了onTouchListener，那么OnTouchListener方法中的onTouch方法会被回调。onTouch方法返回true，则onTouchEvent方法不会被调用（onClick事件是在onTouchEvent中调用）所以三者优先级是onTouch-&gt;onTouchEvent-&gt;onClick</p>
+</li>
+<li><p>View 的onTouchEvent 方法默认都会消费掉事件（返回true），除非它是不可点击的（clickable和longClickable同时为false），View的longClickable默认为false，clickable需要区分情况，如Button的clickable默认为true，而TextView的clickable默认为false。</p>
+</li>
+</ol>
+<p>ACTION_DOWN</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/966283-b9cb65aceea9219b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>ACTION_MOVE ACTION_UP</p>
 <p>在哪个View的onTouchEvent 返回true，那么ACTION_MOVE和ACTION_UP的事件从上往下传到这个View后就不再往下传递了，而直接传给自己的onTouchEvent 并结束本次事件传递过程。</p>
@@ -431,8 +449,7 @@ startActivity(intent);
     
     <summary type="html">
     
-      &lt;h1 id=&quot;Android-事件分发流&quot;&gt;&lt;a href=&quot;#Android-事件分发流&quot; class=&quot;headerlink&quot; title=&quot;Android 事件分发流&quot;&gt;&lt;/a&gt;Android 事件分发流&lt;/h1&gt;&lt;p&gt;ACTION_DOWN&lt;/p&gt;
-&lt;p&gt;&lt;img sr
+      &lt;h1 id=&quot;Android-事件分发流&quot;&gt;&lt;a href=&quot;#Android-事件分发流&quot; class=&quot;headerlink&quot; title=&quot;Android 事件分发流&quot;&gt;&lt;/a&gt;Android 事件分发流&lt;/h1&gt;&lt;p&gt;事件分发需要View的三个重要方法来共同完成：&lt;/p
     
     </summary>
     
